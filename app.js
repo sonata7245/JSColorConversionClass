@@ -6,19 +6,19 @@ class Color {
         this.name = name;
     }
     rgb() {
-        const { r, g, b } = this;
+        let { r, g, b } = this;
         return `RGB(${r}, ${g}, ${b})`
     }
 
     toHex() {
-        const { r, g, b } = this;
+        let { r, g, b } = this;
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     }
 
     toHSL() {
         // see https://en.wikipedia.org/wiki/HSL_and_HSV#Formal_derivation
         // convert r,g,b [0,255] range to [0,1]
-        const { r, g, b } = this;
+        let { r, g, b } = this;
         r = r / 255;
         g = g / 255;
         b = b / 255;
