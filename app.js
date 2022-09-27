@@ -13,8 +13,8 @@ class Color {
         let { r, g, b } = this;
         return `${r}, ${g}, ${b}`;
     }
-    
-    rgba(a = 1.0){
+
+    rgba(a = 1.0) {
         return `RGB(${this.innerRGB()}, ${a})`;
     }
     toHex() {
@@ -66,6 +66,9 @@ class Color {
         // Multiply l and s by 100
         s = +(s * 100).toFixed(1);
         l = +(l * 100).toFixed(1);
+        this.h = h;
+        this.s = s;
+        this.l = l;
 
         return "hsl(" + h + "," + s + "%," + l + "%)";
     }
