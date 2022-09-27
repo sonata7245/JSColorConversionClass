@@ -4,6 +4,7 @@ class Color {
         this.g = g;
         this.b = b;
         this.name = name;
+        this.toHSL();
     }
     rgb() {
         return `RGB(${this.innerRGB()})`;
@@ -17,9 +18,26 @@ class Color {
     rgba(a = 1.0) {
         return `RGB(${this.innerRGB()}, ${a})`;
     }
-    toHex() {
+
+    hsl() {
+        let { h, s, l } = this;
+        return `hsl(${h}, ${s}%, ${l}%)`;
+    }
+
+    hex() {
         let { r, g, b } = this;
         return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+    }
+
+    opposite() {
+        let { h, s, l } = this;
+        const newHue = h + 180 % 360;
+        return `hsl(${newHue}, ${s}%, ${l}%)`
+    }
+
+    fullSaturation() {
+        const { h, l } = this;
+        return `hsl(${h}, 100%, ${l}%)`
     }
 
     toHSL() {
@@ -69,7 +87,5 @@ class Color {
         this.h = h;
         this.s = s;
         this.l = l;
-
-        return "hsl(" + h + "," + s + "%," + l + "%)";
     }
 }
