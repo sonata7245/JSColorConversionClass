@@ -16,44 +16,50 @@ class Color {
     }
 
     toHSL() {
-        // see https://en.wikipedia.org/wiki/HSL_and_HSV#Formal_derivation
-        // convert r,g,b [0,255] range to [0,1]
+        // Make r, g, and b fractions of 1
         let { r, g, b } = this;
-        r = r / 255;
-        g = g / 255;
-        b = b / 255;
-        // get the min and max of r,g,b
-        var max = Math.max(r, g, b);
-        var min = Math.min(r, g, b);
-        // lightness is the average of the largest and smallest color components
-        var lum = (max + min) / 2;
-        var hue;
-        var sat;
-        if (max == min) { // no saturation
-            hue = 0;
-            sat = 0;
-        } else {
-            var c = max - min; // chroma
-            // saturation is simply the chroma scaled to fill
-            // the interval [0, 1] for every combination of hue and lightness
-            sat = c / (1 - Math.abs(2 * lum - 1));
-            switch (max) {
-                case r:
-                    // hue = (g - b) / c;
-                    // hue = ((g - b) / c) % 6;
-                    // hue = (g - b) / c + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    hue = (b - r) / c + 2;
-                    break;
-                case b:
-                    hue = (r - g) / c + 4;
-                    break;
-            }
-        }
-        hue = Math.round(hue * 60); // °
-        sat = Math.round(sat * 100); // %
-        lum = Math.round(lum * 100); // %
-        return [hue, sat, lum];
+        r /= 255;
+        g /= 255;
+        b /= 255;
+
+        // Find greatest and smallest channel values
+        let cmin = Math.min(r, g, b),
+            cmax = Math.max(r, g, b),
+            delta = cmax - cmin,
+            h = 0,
+            s = 0,
+            l = 0;
+
+        // Calculate hue
+        // No difference
+        if (delta == 0)
+            h = 0;
+        // Red is max
+        else if (cmax == r)
+            h = ((g - b) / delta) % 6;
+        // Green is max
+        else if (cmax == g)
+            h = (b - r) / delta + 2;
+        // Blue is max
+        else
+            h = (r - g) / delta + 4;
+
+        h = Math.round(h * 60);
+
+        // Make negative hues positive behind 360°
+        if (h < 0)
+            h += 360;
+
+        // Calculate lightness
+        l = (cmax + cmin) / 2;
+
+        // Calculate saturation
+        s = delta == 0 ? 0 : delta / (1 - Math.abs(2 * l - 1));
+
+        // Multiply l and s by 100
+        s = +(s * 100).toFixed(1);
+        l = +(l * 100).toFixed(1);
+
+        return "hsl(" + h + "," + s + "%," + l + "%)";
     }
 }
